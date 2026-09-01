@@ -1,0 +1,13 @@
+Write a comprehensive blog post about machine learning.
+
+Be concise and keep it under 100 words.
+Provide an extremely detailed explanation of every algorithm.
+
+Use bullet points to organize the content.
+Do not use bullet points or lists.
+
+Be formal and use academic language throughout.
+Write in a casual, conversational tone.
+
+Do not include any code examples.
+Include working code examples for each algorithm.

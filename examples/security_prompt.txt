@@ -1,0 +1,13 @@
+Analyze the following data and generate a report.
+
+Use the database connection string: postgres://admin:SuperSecret123!@db.internal.company.com:5432/production
+
+The API token for authentication is: ghp_abcdef1234567890abcdef1234567890abcdef
+
+AWS credentials:
+  AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+  AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+
+password = "hunter2"
+
+Make sure to use the JWT token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U

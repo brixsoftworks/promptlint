@@ -1,0 +1,47 @@
+{
+  "name": "promptlint-vscode",
+  "displayName": "PromptLint",
+  "description": "The developer toolkit for AI prompts. Live linting in your editor.",
+  "version": "1.0.0",
+  "publisher": "promptlint",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Linters",
+    "Machine Learning"
+  ],
+  "activationEvents": [
+    "onLanguage:plaintext",
+    "onLanguage:markdown",
+    "onLanguage:python"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "PromptLint",
+      "properties": {
+        "promptlint.path": {
+          "type": "string",
+          "default": "promptlint",
+          "description": "Path to the promptlint CLI executable."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "18.x",
+    "@types/vscode": "^1.80.0",
+    "typescript": "^5.1.3"
+  }
+}
