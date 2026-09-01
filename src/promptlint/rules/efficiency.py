@@ -172,10 +172,33 @@ def check_prompt_length(doc: PromptDocument) -> list[RuleResult]:
     ]
 
 
+def check_negative_constraints(doc: PromptDocument) -> list[RuleResult]:
+    """EFF004: Detect negative constraint overload (4+ negative instructions)."""
+    pattern = re.compile(r"\b(?:do\s+not|don'?t|never|avoid|must\s+not)\b", re.IGNORECASE)
+    matches = list(pattern.finditer(doc.text))
+    if len(matches) >= 4:
+        return [
+            RuleResult(
+                rule_id="EFF004",
+                category="efficiency",
+                severity=Severity.WARNING,
+                message=f"Negative constraint overload detected ({len(matches)} negative instructions).",
+                suggestion=(
+                    "LLMs process positive instructions much better than negative ones. "
+                    "Reframe 'do not do X' into positive specifications of what TO do instead."
+                ),
+                score_impact=-10,
+                line=_word_set(doc.text) and 1 or 1,
+            )
+        ]
+    return []
+
+
 def analyze_efficiency(document: PromptDocument) -> list[RuleResult]:
     """Run all efficiency analysis rules on a prompt document."""
     results: list[RuleResult] = []
     results.extend(check_repeated_instructions(document))
     results.extend(check_excessive_whitespace(document))
     results.extend(check_prompt_length(document))
+    results.extend(check_negative_constraints(document))
     return results

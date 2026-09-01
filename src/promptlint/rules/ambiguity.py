@@ -136,6 +136,43 @@ def _check_amb003_undefined_references(document: PromptDocument) -> list[RuleRes
     return results
 
 
+# AMB004 - Hallucination Risk
+HALLUCINATION_PATTERNS = [
+    (
+        r"\b(?:guess|make\s+up|invent|fabricate|imagine)\s+(?:facts|data|information|details|answers?)\b",
+        "Encouraging model to invent facts",
+    ),
+    (r"\bfeel\s+free\s+to\s+(?:speculate|guess|make\s+up)\b", "Explicit permission to speculate or invent details"),
+    (r"\bhallucinate\b", "Explicit mention of hallucination"),
+]
+
+_HALLUCINATION_REGEXES = [(re.compile(p, re.IGNORECASE), desc) for p, desc in HALLUCINATION_PATTERNS]
+
+
+def _check_amb004_hallucination_risk(document: PromptDocument) -> list[RuleResult]:
+    """
+    AMB004: Detect instructions that encourage model hallucination or fact fabrication.
+    """
+    results = []
+    for i, line in enumerate(document.lines):
+        for pattern, desc in _HALLUCINATION_REGEXES:
+            match = pattern.search(line)
+            if match:
+                results.append(
+                    RuleResult(
+                        rule_id="AMB004",
+                        category="ambiguity",
+                        severity=Severity.WARNING,
+                        message=f"Hallucination risk detected: {desc} ('{match.group()}').",
+                        suggestion="Instruct the model to state 'I don't know' or rely only on provided facts rather than guessing.",
+                        score_impact=-15,
+                        line=i + 1,
+                        column=match.start() + 1,
+                    )
+                )
+    return results
+
+
 def analyze_ambiguity(document: PromptDocument) -> list[RuleResult]:
     """
     Run all ambiguity detection rules on the given document.
@@ -144,4 +181,5 @@ def analyze_ambiguity(document: PromptDocument) -> list[RuleResult]:
         *_check_amb001_vague_quantities(document),
         *_check_amb002_subjective_quality(document),
         *_check_amb003_undefined_references(document),
+        *_check_amb004_hallucination_risk(document),
     ]

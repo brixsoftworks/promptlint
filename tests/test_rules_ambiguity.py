@@ -37,3 +37,16 @@ def test_amb003_undefined_references():
     doc2 = parse_prompt("The data should be processed properly.")
     res2 = _check_amb003_undefined_references(doc2)
     assert len(res2) == 0
+
+
+def test_amb004_hallucination_risk():
+    from promptlint.rules.ambiguity import _check_amb004_hallucination_risk
+
+    doc = parse_prompt("Feel free to guess facts about the historical event.")
+    res = _check_amb004_hallucination_risk(doc)
+    assert len(res) >= 1
+    assert res[0].rule_id == "AMB004"
+
+    doc2 = parse_prompt("Rely only on facts in the provided context.")
+    res2 = _check_amb004_hallucination_risk(doc2)
+    assert len(res2) == 0

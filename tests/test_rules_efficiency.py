@@ -37,3 +37,16 @@ def test_eff003_prompt_length():
     doc2 = parse_prompt("word " * 100)
     res2 = check_prompt_length(doc2)
     assert len(res2) == 0
+
+
+def test_eff004_negative_constraints():
+    from promptlint.rules.efficiency import check_negative_constraints
+
+    doc = parse_prompt("Do not use markdown. Don't use bullet points. Never include code. Avoid long sentences.")
+    res = check_negative_constraints(doc)
+    assert len(res) == 1
+    assert res[0].rule_id == "EFF004"
+
+    doc2 = parse_prompt("Use plain text format and keep sentences short.")
+    res2 = check_negative_constraints(doc2)
+    assert len(res2) == 0

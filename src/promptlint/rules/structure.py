@@ -387,12 +387,44 @@ def check_context_without_instruction(doc: PromptDocument) -> list[RuleResult]:
     ]
 
 
+def check_missing_delimiters(doc: PromptDocument) -> list[RuleResult]:
+    """STRUCT005: Detect references to input context without explicit delimiter blocks."""
+    if doc.word_count < 15:
+        return []
+
+    pattern = re.compile(
+        r"\b(?:the|this|following)\s+(?:text|code|context|document|article|dataset|input)\b",
+        re.IGNORECASE,
+    )
+    has_input_reference = bool(pattern.search(doc.text))
+
+    # Delimiters: ```, <tag>, ###
+    has_delimiters = bool(re.search(r"```|<[a-zA-Z_]+>|###", doc.text))
+
+    if has_input_reference and not has_delimiters:
+        return [
+            RuleResult(
+                rule_id="STRUCT005",
+                category="structure",
+                severity=Severity.INFO,
+                message="Input data or context is referenced without explicit delimiter blocks (e.g. ``` or <context> tags).",
+                suggestion=(
+                    "Enclose user input, code, or context in clear delimiter tags like `<context>...</context>` "
+                    "or ` ``` ` blocks to prevent prompt injection and model confusion."
+                ),
+                score_impact=-5,
+            )
+        ]
+    return []
+
+
 def analyze_structure(document: PromptDocument) -> list[RuleResult]:
     """Run all structure analysis rules on a prompt document."""
     results: list[RuleResult] = []
     results.extend(check_missing_objective(document))
     results.extend(check_missing_output_format(document))
     results.extend(check_missing_constraints(document))
+    results.extend(check_missing_delimiters(document))
     # Only check context-without-instruction if STRUCT001 didn't fire
     # (they overlap: both detect missing action verbs)
     if not any(r.rule_id == "STRUCT001" for r in results):

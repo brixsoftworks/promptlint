@@ -49,3 +49,18 @@ def test_struct004_context_no_instruction():
     res = check_context_without_instruction(doc)
     assert len(res) == 1
     assert res[0].rule_id == "STRUCT004"
+
+
+def test_struct005_missing_delimiters():
+    from promptlint.rules.structure import check_missing_delimiters
+
+    doc = parse_prompt(
+        "Please analyze the following document in detail and extract all key takeaways, action items, and structural risks for the leadership team."
+    )
+    res = check_missing_delimiters(doc)
+    assert len(res) == 1
+    assert res[0].rule_id == "STRUCT005"
+
+    doc2 = parse_prompt("Please summarize the following document:\n```\nSome document content here...\n```")
+    res2 = check_missing_delimiters(doc2)
+    assert len(res2) == 0
