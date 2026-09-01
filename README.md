@@ -1,179 +1,159 @@
-# PromptLint
+<div align="center">
 
-**The developer toolkit for AI prompts.**
+# ⚡ PromptLint
 
-Write prompts. Lint them. Test them. Ship them.
+### *Write prompts. Lint them. Test them. Ship them.*
+
+The developer toolkit for testing, analyzing, optimizing, and versioning AI prompts.
+
+[Live Playground](https://brixsoftworks.github.io/promptlint/) • [Documentation](docs/rules.md) • [VS Code Extension](extensions/vscode/) • [Report Bug](https://github.com/brixsoftworks/promptlint/issues)
+
+[![Tests](https://github.com/brixsoftworks/promptlint/actions/workflows/tests.yml/badge.svg)](https://github.com/brixsoftworks/promptlint/actions/workflows/tests.yml)
+[![PyPI version](https://img.shields.io/badge/pypi-v1.0.0-blue.svg)](https://pypi.org/project/promptlint/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-brightgreen.svg)](pyproject.toml)
+[![MCP Server](https://img.shields.io/badge/MCP-Compatible-purple.svg)](src/promptlint/mcp_server.py)
+[![VS Code](https://img.shields.io/badge/VS_Code-Extension-007ACC.svg)](extensions/vscode/)
+
+<br>
+
+```text
+  PROMPTLINT
+      │
+┌─────┼─────┐
+↓     ↓     ↓
+LINT  FIX  TEST
+│     │     │
+└─────┼─────┘
+      ↓
+ SCORE ENGINE ── (Quality • Security • Cost)
+```
+
+</div>
 
 ---
 
-PromptLint is a fast, offline-first linter and quality analyzer for AI prompts. It works like ESLint or Ruff — but for LLM prompts. No API keys required. No data leaves your machine.
+## 🚀 Quickstart
 
-## Installation
+Install PromptLint in seconds:
 
 ```bash
 pip install promptlint
 ```
 
-## Quick Start
-
+### 1. Score a Prompt File
 ```bash
-# Analyze a prompt
-promptlint analyze prompt.txt
-
-# Score only
 promptlint score prompt.txt
+```
 
-# Security scan
+### 2. Full Diagnostic Analysis
+```bash
+promptlint analyze prompt.txt
+```
+
+### 3. Security Scan (Offline API Key & Injection Protection)
+```bash
 promptlint security prompt.txt
-
-# Token count
-promptlint tokens prompt.txt
-
-# Fix structural issues
-promptlint fix prompt.txt
-
-# Compare two prompts
-promptlint diff old.txt new.txt
-
-# JSON output for CI/CD
-promptlint analyze prompt.txt --json
 ```
 
-## Example Output
-
-```
- PromptLint 1.0.0
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
- QUALITY SCORE                    74/100  (Fair)
-
- Structure                        82
- Clarity                          68
- Ambiguity                        71
- Efficiency                       79
- Security                         91
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
- ⚠ STRUCT002   Missing output format
-   Specify the expected output structure.
-
- ⚠ CLAR001     Vague instruction: 'make it better'
-   Define what 'better' means: shorter, more
-   accurate, more formal, or more detailed.
-
- ✕ SEC001      Possible secret detected
-   Remove credentials from the prompt.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
- 3 issues found
+### 4. Auto-Fix Prompt
+```bash
+promptlint fix prompt.txt --output fixed_prompt.txt
 ```
 
-## Features
+---
 
-- 🔍 **Lint** — Detect structural problems, vague instructions, ambiguity, conflicts, and inefficiencies
-- 🛡️ **Security** — Find accidentally leaked API keys, tokens, passwords, and prompt injection patterns
-- 📊 **Score** — Get a heuristic quality score (0-100) with per-category breakdown
-- 🔧 **Fix** — Apply deterministic improvements without needing an LLM
-- 📈 **Diff** — Compare two prompt versions and see quality changes
-- ⚡ **Fast** — Instant analysis, no network calls, no API keys
-- 🔒 **Private** — Your prompts never leave your machine
+## 🔥 Features at a Glance
 
-## Rules
+| Feature | Description |
+| :--- | :--- |
+| 🛡️ **Zero-Data Leak Security** | 100% offline scanner for AWS/OpenAI/GitHub secrets and prompt injection attacks. |
+| ⚡ **Sub-10ms Rule Engine** | 25+ deterministic rules covering structure, clarity, ambiguity, conflicts, and cost. |
+| 🤖 **Native MCP Server** | Exposes `lint_prompt` and `auto_fix_prompt` to **Claude Code**, **Antigravity**, and **Cursor**. |
+| 🔌 **VS Code Extension** | Real-time red squiggly lint diagnostics in your IDE via Language Server Protocol (LSP). |
+| 🐍 **Python AST Extractor** | Automatically extracts and lints prompt strings directly out of `.py` source code. |
+| ✨ **Magic AI Rewriter** | Optional `--magic` flag to trigger LLM-driven prompt architecture optimization. |
 
-| Category | Rules | Description |
-|----------|-------|-------------|
-| Structure | `STRUCT001`–`STRUCT004` | Missing objective, output format, constraints |
-| Clarity | `CLAR001`–`CLAR003` | Vague instructions, undefined terms, ambiguous references |
-| Ambiguity | `AMB001`–`AMB003` | Vague quantities, subjective quality, unclear references |
-| Conflicts | `CONF001` | Contradictory instructions |
-| Efficiency | `EFF001`–`EFF003` | Repeated instructions, excessive whitespace, overly long prompts |
-| Security | `SEC001`–`SEC003` | Secrets, prompt injection, untrusted content mixing |
+---
 
-## Scoring
+## 🛠️ Usage & Commands
 
-The **PromptLint Quality Score** is a heuristic metric — not a scientifically objective measurement.
+```text
+Usage: promptlint [OPTIONS] COMMAND [ARGS]...
 
-| Score | Rating |
-|-------|--------|
-| 90–100 | Excellent |
-| 75–89 | Good |
-| 60–74 | Fair |
-| 40–59 | Needs Work |
-| 0–39 | Poor |
-
-## Python API
-
-```python
-from promptlint import analyze
-
-report = analyze("Write a poem about Python.")
-print(f"Score: {report.score}/100 ({report.rating})")
-for issue in report.results:
-    print(f"  {issue.rule_id}: {issue.message}")
+Commands:
+  analyze     Analyze a prompt and report quality issues.
+  score       Show only the quality score for a prompt.
+  security    Run a security scan on a prompt.
+  tokens      Show token count and size statistics.
+  fix         Apply deterministic or magic improvements to a prompt.
+  diff        Compare two prompt versions and show quality changes.
+  mcp         Start the Model Context Protocol (MCP) Server.
+  lsp         Start the Language Server Protocol (LSP) Server.
 ```
 
-## Architecture
-
-```
-                    CLI
-                     │
-                     ▼
-               Command Layer
-                     │
-                     ▼
-               Prompt Parser
-                     │
-          ┌──────────┼──────────┐
-          ▼          ▼          ▼
-      Quality     Security     Token
-      Analyzer    Analyzer     Analyzer
-          │          │          │
-          └──────────┼──────────┘
-                     ▼
-                Score Engine
-                     │
-                     ▼
-                Report Engine
-                     │
-          ┌──────────┴──────────┐
-          ▼                     ▼
-       Terminal               JSON
+### Pipe & Stdin Support
+```bash
+echo "Write a blog post about AI. Make it good." | promptlint analyze -
 ```
 
-The core analyzer works completely offline. No network calls. No telemetry. No analytics.
-
-## Privacy & Security
-
-- ✅ Core analysis is 100% offline
-- ✅ No telemetry or analytics
-- ✅ No hidden API calls
-- ✅ Your prompts never leave your machine
-- ✅ MIT licensed
-
-## Configuration
-
-Create a `.promptlintrc.toml` file:
-
-```toml
-disabled_rules = ["EFF003"]
-
-[severity_overrides]
-STRUCT002 = "info"
+### Interactive Mode (No Arguments)
+Simply type `promptlint` in your terminal to launch the interactive terminal wizard:
+```bash
+promptlint
 ```
 
-## Roadmap
+---
 
-- [x] v1.0 — Core linting, scoring, fixing, diffing
-- [ ] v2.0 — `promptlint test` with model adapters, benchmarking
-- [ ] v3.0 — GitHub Action, VS Code extension, web playground
+## 🤖 AI Agent Integration (MCP Server)
 
-## Contributing
+PromptLint implements the **Model Context Protocol (MCP)** natively. 
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Add PromptLint to your MCP client configuration (Claude Code, Antigravity, Cursor):
 
-## License
+```json
+{
+  "mcpServers": {
+    "promptlint": {
+      "command": "promptlint",
+      "args": ["mcp"]
+    }
+  }
+}
+```
 
-MIT
+Now your AI coding agents can automatically lint their own generated prompts before running them!
+
+---
+
+## 📊 Rules Reference Matrix
+
+| Rule ID | Category | Severity | Description |
+| :--- | :--- | :--- | :--- |
+| `SEC001` | Security | `CRITICAL` | Hardcoded secret key (AWS, OpenAI, GitHub, Anthropic) |
+| `SEC002` | Security | `ERROR` | Potential prompt injection attempt / system override |
+| `STRUCT001`| Structure | `WARNING` | Missing objective or clear task verb |
+| `STRUCT002`| Structure | `WARNING` | Missing explicit output format specification |
+| `STRUCT005`| Structure | `INFO` | Input context referenced without delimiter tags (`<context>` / ```) |
+| `CLAR001` | Clarity | `WARNING` | Vague quality instructions (*"make it good"*, *"do your best"*) |
+| `AMB004`  | Ambiguity | `WARNING` | Hallucination risk (*"feel free to guess"*, *"invent facts"*) |
+| `CONF001` | Conflicts | `WARNING` | Contradictory instructions (e.g. JSON vs Markdown, Concise vs Detailed) |
+| `EFF001`  | Efficiency | `WARNING` | Repeated instructions wasting tokens |
+| `EFF004`  | Efficiency | `WARNING` | Negative constraint overload (4+ *"do not"* statements) |
+
+---
+
+## 🌐 Live Web Playground
+
+Try PromptLint directly in your browser without installing anything:  
+👉 **[brixsoftworks.github.io/promptlint](https://brixsoftworks.github.io/promptlint/)**
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+
+## 📄 License
+
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
