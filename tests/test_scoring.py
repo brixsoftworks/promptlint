@@ -10,8 +10,10 @@ def test_get_rating():
     assert get_rating(50) == "Needs Work"
     assert get_rating(20) == "Poor"
 
+
 def test_estimate_tokens():
     assert _estimate_tokens(100) == 130
+
 
 def test_calculate_score_perfect():
     doc = parse_prompt("Hello world.")
@@ -19,6 +21,7 @@ def test_calculate_score_perfect():
     assert score == 100
     assert rating == "Excellent"
     assert all(c.score == 100 for c in cat_scores)
+
 
 def test_calculate_score_degraded():
     doc = parse_prompt("Hello world.")
@@ -36,12 +39,12 @@ def test_calculate_score_degraded():
     assert struct_score.score == 90
     assert clarity_score.score == 85
 
+
 def test_calculate_score_clamping():
     doc = parse_prompt("Hello world.")
     # Add many critical errors to push score below 0
     results = [
-        RuleResult(rule_id="X", category="structure", severity=Severity.CRITICAL, message="test")
-        for _ in range(5)
+        RuleResult(rule_id="X", category="structure", severity=Severity.CRITICAL, message="test") for _ in range(5)
     ]
     score, rating, cat_scores, stats = calculate_score(results, doc)
     assert score == 0

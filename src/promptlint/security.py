@@ -43,25 +43,40 @@ _SECRET_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
     ("GitHub OAuth Token", re.compile(r"gho_[a-zA-Z0-9]{36}")),
     ("GitHub App Token", re.compile(r"ghr_[a-zA-Z0-9]{36}")),
     ("GitHub PAT", re.compile(r"github_pat_[a-zA-Z0-9_]{22,}")),
-    ("Private Key", re.compile(r"-----BEGIN\s+(?:RSA\s+|EC\s+|DSA\s+|OPENSSH\s+)?PRIVATE\s+KEY-----")),
+    (
+        "Private Key",
+        re.compile(r"-----BEGIN\s+(?:RSA\s+|EC\s+|DSA\s+|OPENSSH\s+)?PRIVATE\s+KEY-----"),
+    ),
     ("JWT", re.compile(r"eyJ[a-zA-Z0-9_-]{10,}\.eyJ[a-zA-Z0-9_-]{10,}\.[a-zA-Z0-9_-]{10,}")),
     ("Slack Token", re.compile(r"xox[bpors]-[a-zA-Z0-9]{10,}")),
-    ("Password Assignment", re.compile(
-        r"""(?:password|passwd|pwd)\s*[=:]\s*["'][^"']{4,}["']""",
-        re.IGNORECASE,
-    )),
-    ("API Key Assignment", re.compile(
-        r"""(?:api[_-]?key|apikey|api[_-]?secret|access[_-]?key|secret[_-]?key|auth[_-]?token)\s*[=:]\s*["'][a-zA-Z0-9+/=_-]{16,}["']""",
-        re.IGNORECASE,
-    )),
-    ("Generic Token Assignment", re.compile(
-        r"""(?:token|secret|credential)\s*[=:]\s*["'][a-zA-Z0-9+/=_-]{20,}["']""",
-        re.IGNORECASE,
-    )),
-    ("AWS Secret Key", re.compile(
-        r"""(?:aws[_-]?secret|secret[_-]?access[_-]?key)\s*[=:]\s*["']?[a-zA-Z0-9+/=]{40}["']?""",
-        re.IGNORECASE,
-    )),
+    (
+        "Password Assignment",
+        re.compile(
+            r"""(?:password|passwd|pwd)\s*[=:]\s*["'][^"']{4,}["']""",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "API Key Assignment",
+        re.compile(
+            r"""(?:api[_-]?key|apikey|api[_-]?secret|access[_-]?key|secret[_-]?key|auth[_-]?token)\s*[=:]\s*["'][a-zA-Z0-9+/=_-]{16,}["']""",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "Generic Token Assignment",
+        re.compile(
+            r"""(?:token|secret|credential)\s*[=:]\s*["'][a-zA-Z0-9+/=_-]{20,}["']""",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "AWS Secret Key",
+        re.compile(
+            r"""(?:aws[_-]?secret|secret[_-]?access[_-]?key)\s*[=:]\s*["']?[a-zA-Z0-9+/=]{40}["']?""",
+            re.IGNORECASE,
+        ),
+    ),
 ]
 
 
@@ -86,42 +101,69 @@ def detect_secrets(text: str) -> list[SecurityFinding]:
 # --- Prompt injection detection patterns ---
 
 _INJECTION_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
-    ("Ignore instructions", re.compile(
-        r"ignore\s+(?:all\s+)?(?:previous|prior|above|earlier)\s+instructions?",
-        re.IGNORECASE,
-    )),
-    ("Disregard instructions", re.compile(
-        r"disregard\s+(?:all\s+|any\s+)?(?:previous|prior|above)\s+(?:instructions?|rules?|guidelines?)",
-        re.IGNORECASE,
-    )),
-    ("Forget instructions", re.compile(
-        r"forget\s+(?:all\s+|everything\s+|your\s+)?(?:previous|above|prior)\s+(?:instructions?|rules?)?",
-        re.IGNORECASE,
-    )),
-    ("Reveal system prompt", re.compile(
-        r"reveal\s+(?:your\s+|the\s+)?(?:system\s+)?(?:prompt|instructions?)",
-        re.IGNORECASE,
-    )),
-    ("Bypass safety", re.compile(
-        r"bypass\s+(?:safety|security|content)\s+(?:instructions?|filters?|policies|guidelines?|restrictions?)",
-        re.IGNORECASE,
-    )),
-    ("Reveal hidden instructions", re.compile(
-        r"reveal\s+(?:hidden|secret)\s+(?:instructions?|rules?|prompt)",
-        re.IGNORECASE,
-    )),
-    ("Override instructions", re.compile(
-        r"override\s+(?:your\s+|all\s+)?(?:instructions?|rules?|guidelines?|restrictions?)",
-        re.IGNORECASE,
-    )),
-    ("Jailbreak attempt", re.compile(
-        r"(?:you\s+are\s+now\s+in|act\s+as\s+if\s+you\s+have\s+no\s+restrictions?)",
-        re.IGNORECASE,
-    )),
-    ("Pretend no restrictions", re.compile(
-        r"pretend\s+(?:you\s+)?(?:have\s+no|don'?t\s+have\s+(?:any\s+)?)\s*(?:restrictions?|limits?|rules?|guidelines?)",
-        re.IGNORECASE,
-    )),
+    (
+        "Ignore instructions",
+        re.compile(
+            r"ignore\s+(?:all\s+)?(?:previous|prior|above|earlier)\s+instructions?",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "Disregard instructions",
+        re.compile(
+            r"disregard\s+(?:all\s+|any\s+)?(?:previous|prior|above)\s+(?:instructions?|rules?|guidelines?)",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "Forget instructions",
+        re.compile(
+            r"forget\s+(?:all\s+|everything\s+|your\s+)?(?:previous|above|prior)\s+(?:instructions?|rules?)?",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "Reveal system prompt",
+        re.compile(
+            r"reveal\s+(?:your\s+|the\s+)?(?:system\s+)?(?:prompt|instructions?)",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "Bypass safety",
+        re.compile(
+            r"bypass\s+(?:safety|security|content)\s+(?:instructions?|filters?|policies|guidelines?|restrictions?)",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "Reveal hidden instructions",
+        re.compile(
+            r"reveal\s+(?:hidden|secret)\s+(?:instructions?|rules?|prompt)",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "Override instructions",
+        re.compile(
+            r"override\s+(?:your\s+|all\s+)?(?:instructions?|rules?|guidelines?|restrictions?)",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "Jailbreak attempt",
+        re.compile(
+            r"(?:you\s+are\s+now\s+in|act\s+as\s+if\s+you\s+have\s+no\s+restrictions?)",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "Pretend no restrictions",
+        re.compile(
+            r"pretend\s+(?:you\s+)?(?:have\s+no|don'?t\s+have\s+(?:any\s+)?)\s*(?:restrictions?|limits?|rules?|guidelines?)",
+            re.IGNORECASE,
+        ),
+    ),
 ]
 
 

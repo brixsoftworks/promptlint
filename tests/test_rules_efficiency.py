@@ -16,6 +16,7 @@ def test_eff001_repeated_instructions():
     res2 = check_repeated_instructions(doc2)
     assert len(res2) == 0
 
+
 def test_eff002_excessive_whitespace():
     doc = parse_prompt("Hello.\n\n\n\nWorld.")
     res = check_excessive_whitespace(doc)
@@ -25,6 +26,7 @@ def test_eff002_excessive_whitespace():
     doc2 = parse_prompt("Hello.\n\nWorld.")
     res2 = check_excessive_whitespace(doc2)
     assert len(res2) == 0
+
 
 def test_eff003_prompt_length():
     doc = parse_prompt("word " * 2005)

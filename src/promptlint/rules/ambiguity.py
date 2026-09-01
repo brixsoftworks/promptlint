@@ -12,17 +12,23 @@ from promptlint.models import PromptDocument, RuleResult, Severity
 
 # AMB001 - Vague Quantities
 VAGUE_QUANTITIES = [
-    r"a few", r"some", r"many", r"several", r"a lot of", r"a couple of",
-    r"various", r"numerous", r"a number of"
+    r"a few",
+    r"some",
+    r"many",
+    r"several",
+    r"a lot of",
+    r"a couple of",
+    r"various",
+    r"numerous",
+    r"a number of",
 ]
 
-INSTRUCTION_VERBS = [
-    r"provide", r"include", r"add", r"give", r"create", r"list", r"write"
-]
+INSTRUCTION_VERBS = [r"provide", r"include", r"add", r"give", r"create", r"list", r"write"]
 
 # Compile regexes for AMB001 and AMB002
 _VAGUE_QUANTITY_PATTERN = re.compile(r"\b(" + "|".join(VAGUE_QUANTITIES) + r")\b", re.IGNORECASE)
 _INSTRUCTION_VERB_PATTERN = re.compile(r"\b(" + "|".join(INSTRUCTION_VERBS) + r")\b", re.IGNORECASE)
+
 
 def _check_amb001_vague_quantities(document: PromptDocument) -> list[RuleResult]:
     """
@@ -45,7 +51,7 @@ def _check_amb001_vague_quantities(document: PromptDocument) -> list[RuleResult]
                     suggestion=f"Specify an exact number instead of '{vague_word}'.",
                     score_impact=-5,
                     line=i + 1,
-                    column=match.start() + 1
+                    column=match.start() + 1,
                 )
             )
     return results
@@ -53,12 +59,22 @@ def _check_amb001_vague_quantities(document: PromptDocument) -> list[RuleResult]
 
 # AMB002 - Subjective Quality
 SUBJECTIVE_TERMS = [
-    r"high quality", r"well-written", r"professional", r"elegant",
-    r"clean", r"beautiful", r"nice", r"appropriate", r"suitable",
-    r"relevant", r"comprehensive", r"thorough"
+    r"high quality",
+    r"well-written",
+    r"professional",
+    r"elegant",
+    r"clean",
+    r"beautiful",
+    r"nice",
+    r"appropriate",
+    r"suitable",
+    r"relevant",
+    r"comprehensive",
+    r"thorough",
 ]
 
 _SUBJECTIVE_PATTERN = re.compile(r"\b(" + "|".join(SUBJECTIVE_TERMS) + r")\b", re.IGNORECASE)
+
 
 def _check_amb002_subjective_quality(document: PromptDocument) -> list[RuleResult]:
     """
@@ -81,7 +97,7 @@ def _check_amb002_subjective_quality(document: PromptDocument) -> list[RuleResul
                     suggestion=f"Replace '{term}' with measurable criteria or specific examples.",
                     score_impact=-3,
                     line=i + 1,
-                    column=match.start() + 1
+                    column=match.start() + 1,
                 )
             )
     return results
@@ -96,8 +112,8 @@ def _check_amb003_undefined_references(document: PromptDocument) -> list[RuleRes
     results = []
 
     for i, line in enumerate(document.lines):
-        is_first_line = (i == 0)
-        is_start_of_paragraph = is_first_line or not document.lines[i-1].strip()
+        is_first_line = i == 0
+        is_start_of_paragraph = is_first_line or not document.lines[i - 1].strip()
 
         # We only flag if the sentence start is at the beginning of a paragraph
         # to avoid false positives in continuous text where antecedent is likely present.
@@ -114,7 +130,7 @@ def _check_amb003_undefined_references(document: PromptDocument) -> list[RuleRes
                         suggestion=f"Clarify what '{term}' refers to for a more precise instruction.",
                         score_impact=-3,
                         line=i + 1,
-                        column=match.start(1) + 1
+                        column=match.start(1) + 1,
                     )
                 )
     return results
@@ -127,5 +143,5 @@ def analyze_ambiguity(document: PromptDocument) -> list[RuleResult]:
     return [
         *_check_amb001_vague_quantities(document),
         *_check_amb002_subjective_quality(document),
-        *_check_amb003_undefined_references(document)
+        *_check_amb003_undefined_references(document),
     ]

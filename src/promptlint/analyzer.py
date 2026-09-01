@@ -33,6 +33,7 @@ def analyze_prompt(document: PromptDocument, use_ai: bool = False) -> AnalysisRe
     if use_ai:
         try:
             from promptlint.rules.ai import analyze_with_ai
+
             ai_results = analyze_with_ai(document)
             results.extend(ai_results)
         except ImportError:

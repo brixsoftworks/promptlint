@@ -86,9 +86,7 @@ class SecurityStatus(BaseModel):
     """Summary of security analysis findings."""
 
     has_secrets: bool = Field(default=False, description="Whether potential secrets were found")
-    has_injection: bool = Field(
-        default=False, description="Whether prompt injection patterns were found"
-    )
+    has_injection: bool = Field(default=False, description="Whether prompt injection patterns were found")
     finding_count: int = Field(default=0, description="Total number of security findings")
 
 
@@ -98,9 +96,7 @@ class PromptStatistics(BaseModel):
     character_count: int
     word_count: int
     line_count: int
-    estimated_tokens: int = Field(
-        description="Approximate token count. Not exact without a real tokenizer."
-    )
+    estimated_tokens: int = Field(description="Approximate token count. Not exact without a real tokenizer.")
 
 
 class AnalysisReport(BaseModel):
@@ -113,13 +109,9 @@ class AnalysisReport(BaseModel):
     score: int = Field(ge=0, le=100, description="Overall PromptLint Quality Score (0-100)")
     rating: str = Field(description="Human-readable rating (Poor/Needs Work/Fair/Good/Excellent)")
     results: list[RuleResult] = Field(default_factory=list, description="All rule findings")
-    category_scores: list[CategoryScore] = Field(
-        default_factory=list, description="Per-category scores"
-    )
+    category_scores: list[CategoryScore] = Field(default_factory=list, description="Per-category scores")
     statistics: PromptStatistics = Field(description="Prompt size/token statistics")
-    security_status: SecurityStatus = Field(
-        default_factory=SecurityStatus, description="Security analysis summary"
-    )
+    security_status: SecurityStatus = Field(default_factory=SecurityStatus, description="Security analysis summary")
 
     @property
     def issue_count(self) -> int:

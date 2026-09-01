@@ -19,6 +19,7 @@ try:
         Range,
     )
     from pygls.server import LanguageServer
+
     PYGLS_AVAILABLE = True
 except ImportError:
     PYGLS_AVAILABLE = False

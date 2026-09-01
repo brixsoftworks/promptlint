@@ -54,8 +54,9 @@ def print_analysis_report(report: AnalysisReport, console: Console | None = None
 
     # Quality Score
     sc = _score_color(report.score)
-    console.print(f" [bold]QUALITY SCORE[/bold]{'':>20}[bold {sc}]{report.score}/100[/bold {sc}]"
-                  f"  [dim]({report.rating})[/dim]")
+    console.print(
+        f" [bold]QUALITY SCORE[/bold]{'':>20}[bold {sc}]{report.score}/100[/bold {sc}]  [dim]({report.rating})[/dim]"
+    )
     console.print()
 
     # Category scores

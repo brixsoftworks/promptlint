@@ -14,7 +14,7 @@ def test_ai_rule_detects_flaw(mock_evaluate, mock_is_available):
                 "severity": "ERROR",
                 "message": "Missing persona.",
                 "suggestion": "Add a persona.",
-                "score_impact": -10
+                "score_impact": -10,
             }
         ]
     }
@@ -27,11 +27,13 @@ def test_ai_rule_detects_flaw(mock_evaluate, mock_is_available):
     assert results[0].rule_id == "AI001"
     assert results[0].message == "[AI] Missing persona."
 
+
 @patch("promptlint.rules.ai.is_llm_available", return_value=True)
 def test_ai_rule_skips_short_prompts(mock_is_available):
     doc = parse_prompt("Too short.")
     results = analyze_with_ai(doc)
     assert len(results) == 0
+
 
 @patch("promptlint.rules.ai.is_llm_available", return_value=False)
 def test_ai_rule_graceful_degrade(mock_is_available):

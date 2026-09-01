@@ -27,7 +27,7 @@ def _check_untrusted_content(doc: PromptDocument) -> list[RuleResult]:
     )
 
     for match in placeholder_pattern.finditer(doc.text):
-        line = doc.text[:match.start()].count("\n") + 1
+        line = doc.text[: match.start()].count("\n") + 1
         placeholder = match.group()
 
         results.append(

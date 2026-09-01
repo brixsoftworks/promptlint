@@ -7,10 +7,12 @@ def test_config_defaults():
     assert config.disabled_rules == []
     assert config.severity_overrides == {}
 
+
 def test_config_load_no_file(tmp_path):
     config = Config.load(tmp_path)
     assert config.max_prompt_length == 50000
     assert config.disabled_rules == []
+
 
 def test_config_load_file(tmp_path):
     config_file = tmp_path / ".promptlintrc.toml"

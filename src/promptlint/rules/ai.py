@@ -59,20 +59,29 @@ Output JSON strictly matching this schema:
                             "type": "object",
                             "properties": {
                                 "rule_id": {"type": "string"},
-                                "severity": {"type": "string", "enum": ["INFO", "WARNING", "ERROR", "CRITICAL"]},
+                                "severity": {
+                                    "type": "string",
+                                    "enum": ["INFO", "WARNING", "ERROR", "CRITICAL"],
+                                },
                                 "message": {"type": "string"},
                                 "suggestion": {"type": "string"},
-                                "score_impact": {"type": "integer"}
+                                "score_impact": {"type": "integer"},
                             },
-                            "required": ["rule_id", "severity", "message", "suggestion", "score_impact"],
-                            "additionalProperties": False
-                        }
+                            "required": [
+                                "rule_id",
+                                "severity",
+                                "message",
+                                "suggestion",
+                                "score_impact",
+                            ],
+                            "additionalProperties": False,
+                        },
                     }
                 },
                 "required": ["issues"],
-                "additionalProperties": False
-            }
-        }
+                "additionalProperties": False,
+            },
+        },
     }
 
     try:

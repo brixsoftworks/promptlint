@@ -14,6 +14,7 @@ def test_fix_magic_success(mock_evaluate, mock_is_available):
     assert fixed == "<context>\nYou are a pro.\n</context>"
     mock_evaluate.assert_called_once()
 
+
 @patch("promptlint.fixer_ai.is_llm_available", return_value=False)
 def test_fix_magic_fails_without_llm(mock_is_available):
     with pytest.raises(RuntimeError):

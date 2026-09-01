@@ -20,9 +20,33 @@ def _word_set(sentence: str) -> set[str]:
     """Extract the set of meaningful words from a sentence."""
     words = re.findall(r"\b[a-z]+\b", sentence.lower())
     # Filter out very common words to focus on content words
-    stop_words = {"the", "a", "an", "is", "are", "was", "were", "be", "been",
-                  "to", "of", "in", "on", "at", "for", "and", "or", "but",
-                  "it", "its", "this", "that", "with", "as", "by"}
+    stop_words = {
+        "the",
+        "a",
+        "an",
+        "is",
+        "are",
+        "was",
+        "were",
+        "be",
+        "been",
+        "to",
+        "of",
+        "in",
+        "on",
+        "at",
+        "for",
+        "and",
+        "or",
+        "but",
+        "it",
+        "its",
+        "this",
+        "that",
+        "with",
+        "as",
+        "by",
+    }
     return {w for w in words if w not in stop_words and len(w) > 1}
 
 
@@ -72,10 +96,7 @@ def check_repeated_instructions(doc: PromptDocument) -> list[RuleResult]:
                             rule_id="EFF001",
                             category="efficiency",
                             severity=Severity.WARNING,
-                            message=(
-                                f"Repeated instruction detected on line {line_j} "
-                                f"(similar to line {line_i})."
-                            ),
+                            message=(f"Repeated instruction detected on line {line_j} (similar to line {line_i})."),
                             suggestion=(
                                 "Remove the duplicate instruction. Repeating instructions "
                                 "wastes tokens without improving model performance."

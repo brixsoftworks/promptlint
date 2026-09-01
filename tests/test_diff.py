@@ -10,6 +10,7 @@ def test_diff_prompts():
     assert result.old_name == "old"
     assert result.new_name == "new"
 
+
 def test_diff_regression():
     old = "Write a story. The story must be 500 words. Format as a markdown list."
     new = "Please make it better and do a good job."

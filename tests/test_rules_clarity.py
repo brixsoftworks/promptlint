@@ -16,6 +16,7 @@ def test_clar001_vague_instructions():
     res2 = check_vague_instructions(doc2)
     assert len(res2) == 0
 
+
 def test_clar002_undefined_terminology():
     doc = parse_prompt("Use the DFR technique to solve this.")
     res = check_undefined_terminology(doc)
@@ -25,6 +26,7 @@ def test_clar002_undefined_terminology():
     doc2 = parse_prompt("Use the DFR (Data Flow Routing) technique.")
     res2 = check_undefined_terminology(doc2)
     assert len(res2) == 0
+
 
 def test_clar003_ambiguous_references():
     doc = parse_prompt("We have a new system.\n\nIt should be fast.")

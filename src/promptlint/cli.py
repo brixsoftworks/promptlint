@@ -59,7 +59,13 @@ def _version_callback(value: bool) -> None:
 def main(
     version: Annotated[
         bool | None,
-        typer.Option("--version", "-V", help="Show version and exit.", callback=_version_callback, is_eager=True),
+        typer.Option(
+            "--version",
+            "-V",
+            help="Show version and exit.",
+            callback=_version_callback,
+            is_eager=True,
+        ),
     ] = None,
 ) -> None:
     """PromptLint — The developer toolkit for AI prompts."""
@@ -82,6 +88,7 @@ def analyze(
     # Check if this is a Python file
     if file.endswith(".py") and file != "-":
         from promptlint.extractor import extract_prompts_from_python
+
         prompts = extract_prompts_from_python(text)
         if not prompts:
             console.print(f"[yellow]No prompts found in {file}.[/yellow]")
@@ -92,7 +99,9 @@ def analyze(
         for i, extracted in enumerate(prompts, 1):
             doc = parse_prompt(extracted.text)
             report = analyze_prompt(doc, use_ai=ai)
-            console.print(f"[bold]Prompt {i} (line {extracted.line_number})[/bold] - Context: [dim]{extracted.context_name}[/dim]")
+            console.print(
+                f"[bold]Prompt {i} (line {extracted.line_number})[/bold] - Context: [dim]{extracted.context_name}[/dim]"
+            )
             print_score_report(report, console)
             if report.issue_count > 0:
                 has_issues = True
@@ -135,6 +144,7 @@ def score(
 
     if json_output:
         import json
+
         data = {"score": report.score, "rating": report.rating}
         sys.stdout.write(json.dumps(data, indent=2) + "\n")
     else:
@@ -157,13 +167,10 @@ def security(
 
     if json_output:
         import json
+
         security_data = {
             "security_status": report.security_status.model_dump(),
-            "findings": [
-                r.model_dump(mode="json")
-                for r in report.results
-                if r.category == "security"
-            ],
+            "findings": [r.model_dump(mode="json") for r in report.results if r.category == "security"],
         }
         sys.stdout.write(json.dumps(security_data, indent=2) + "\n")
     else:
@@ -189,6 +196,7 @@ def tokens(
 
     if json_output:
         import json
+
         sys.stdout.write(json.dumps(statistics.model_dump(), indent=2) + "\n")
     else:
         print_token_report(statistics, console)
@@ -210,6 +218,7 @@ def fix(
 
     if magic:
         from promptlint.fixer_ai import fix_prompt_magic
+
         try:
             fixed = fix_prompt_magic(text)
         except Exception as e:
@@ -217,6 +226,7 @@ def fix(
             raise typer.Exit(1)
     else:
         from promptlint.fixer import fix_prompt
+
         fixed = fix_prompt(text)
 
     if output:
@@ -246,9 +256,18 @@ def diff(
 
     if json_output:
         import json
+
         data = {
-            "old": {"name": old_name, "score": result.old_report.score, "rating": result.old_report.rating},
-            "new": {"name": new_name, "score": result.new_report.score, "rating": result.new_report.rating},
+            "old": {
+                "name": old_name,
+                "score": result.old_report.score,
+                "rating": result.old_report.rating,
+            },
+            "new": {
+                "name": new_name,
+                "score": result.new_report.score,
+                "rating": result.new_report.rating,
+            },
             "delta": result.score_delta,
         }
         sys.stdout.write(json.dumps(data, indent=2) + "\n")
@@ -291,6 +310,7 @@ def test(
 def lsp() -> None:
     """Start the Language Server Protocol (LSP)."""
     from promptlint.lsp import start_language_server
+
     start_language_server()
 
 
@@ -298,6 +318,7 @@ def lsp() -> None:
 def mcp() -> None:
     """Start the Model Context Protocol (MCP) Server."""
     from promptlint.mcp_server import start_mcp_server
+
     start_mcp_server()
 
 

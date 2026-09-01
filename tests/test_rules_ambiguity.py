@@ -16,6 +16,7 @@ def test_amb001_vague_quantities():
     res2 = _check_amb001_vague_quantities(doc2)
     assert len(res2) == 0
 
+
 def test_amb002_subjective_quality():
     doc = parse_prompt("Write a high quality essay.")
     res = _check_amb002_subjective_quality(doc)
@@ -25,6 +26,7 @@ def test_amb002_subjective_quality():
     doc2 = parse_prompt("Write an essay with 500 words.")
     res2 = _check_amb002_subjective_quality(doc2)
     assert len(res2) == 0
+
 
 def test_amb003_undefined_references():
     doc = parse_prompt("It should be processed properly.")

@@ -36,15 +36,9 @@ _VAGUE_PHRASES: dict[str, str] = {
     r"handle (?:it|this|that) (?:well|appropriately|properly)": (
         "Specify exact handling behavior: error cases, edge cases, or expected outcomes."
     ),
-    r"do a good job": (
-        "Define success criteria: what does a 'good job' look like? Provide examples or metrics."
-    ),
-    r"optimize (?:it|this|that)": (
-        "Specify the optimization target: speed, size, readability, cost, or accuracy."
-    ),
-    r"fix (?:it|this|that)": (
-        "Describe the specific problem to fix and the expected correct behavior."
-    ),
+    r"do a good job": ("Define success criteria: what does a 'good job' look like? Provide examples or metrics."),
+    r"optimize (?:it|this|that)": ("Specify the optimization target: speed, size, readability, cost, or accuracy."),
+    r"fix (?:it|this|that)": ("Describe the specific problem to fix and the expected correct behavior."),
     r"clean (?:it|this|that) up": (
         "Specify what 'clean up' means: remove redundancy, improve formatting, fix errors, or restructure."
     ),
@@ -55,22 +49,141 @@ _VAGUE_PHRASES: dict[str, str] = {
 
 # Common abbreviations that should NOT be flagged as undefined terminology.
 _COMMON_ABBREVIATIONS = {
-    "API", "URL", "HTML", "CSS", "JSON", "SQL", "HTTP", "HTTPS", "REST",
-    "XML", "CSV", "PDF", "PNG", "JPG", "GIF", "SVG", "YAML", "TOML",
-    "CLI", "GUI", "IDE", "SDK", "CDN", "DNS", "TCP", "UDP", "SSH",
-    "SSL", "TLS", "JWT", "OAuth", "SMTP", "IMAP", "POP", "FTP", "SFTP",
-    "AWS", "GCP", "CPU", "GPU", "RAM", "SSD", "HDD", "ROM", "USB",
-    "CRUD", "ORM", "MVC", "MVP", "OOP", "DRY", "KISS", "SOLID",
-    "CI", "CD", "TDD", "BDD", "QA", "UAT", "SLA", "KPI", "ROI",
-    "CEO", "CTO", "CFO", "COO", "VP", "HR", "PR", "FAQ", "FYI",
-    "USA", "UK", "EU", "UN", "GDP", "GPA", "SAT", "ACT", "MBA",
-    "PhD", "MD", "AI", "ML", "NLP", "LLM", "GPT", "RGB", "HEX",
-    "ISO", "IEEE", "RFC", "MIME", "UTF", "ASCII", "BASE64", "UUID",
-    "CRM", "ERP", "SaaS", "PaaS", "IaaS", "VM", "VPN", "LAN", "WAN",
-    "FIFO", "LIFO", "EOF", "NULL", "STDIN", "STDOUT", "STDERR",
-    "TODO", "FIXME", "NOTE", "XXX", "HACK", "TEMP", "TBD", "WIP",
-    "ASAP", "ETA", "POC", "CORS", "XSS", "CSRF",
-    "DOS", "DDOS", "RSA", "AES", "SHA", "HMAC", "PGP", "GPG",
+    "API",
+    "URL",
+    "HTML",
+    "CSS",
+    "JSON",
+    "SQL",
+    "HTTP",
+    "HTTPS",
+    "REST",
+    "XML",
+    "CSV",
+    "PDF",
+    "PNG",
+    "JPG",
+    "GIF",
+    "SVG",
+    "YAML",
+    "TOML",
+    "CLI",
+    "GUI",
+    "IDE",
+    "SDK",
+    "CDN",
+    "DNS",
+    "TCP",
+    "UDP",
+    "SSH",
+    "SSL",
+    "TLS",
+    "JWT",
+    "OAuth",
+    "SMTP",
+    "IMAP",
+    "POP",
+    "FTP",
+    "SFTP",
+    "AWS",
+    "GCP",
+    "CPU",
+    "GPU",
+    "RAM",
+    "SSD",
+    "HDD",
+    "ROM",
+    "USB",
+    "CRUD",
+    "ORM",
+    "MVC",
+    "MVP",
+    "OOP",
+    "DRY",
+    "KISS",
+    "SOLID",
+    "CI",
+    "CD",
+    "TDD",
+    "BDD",
+    "QA",
+    "UAT",
+    "SLA",
+    "KPI",
+    "ROI",
+    "CEO",
+    "CTO",
+    "CFO",
+    "COO",
+    "VP",
+    "HR",
+    "PR",
+    "FAQ",
+    "FYI",
+    "USA",
+    "UK",
+    "EU",
+    "UN",
+    "GDP",
+    "GPA",
+    "SAT",
+    "ACT",
+    "MBA",
+    "PhD",
+    "MD",
+    "AI",
+    "ML",
+    "NLP",
+    "LLM",
+    "GPT",
+    "RGB",
+    "HEX",
+    "ISO",
+    "IEEE",
+    "RFC",
+    "MIME",
+    "UTF",
+    "ASCII",
+    "BASE64",
+    "UUID",
+    "CRM",
+    "ERP",
+    "SaaS",
+    "PaaS",
+    "IaaS",
+    "VM",
+    "VPN",
+    "LAN",
+    "WAN",
+    "FIFO",
+    "LIFO",
+    "EOF",
+    "NULL",
+    "STDIN",
+    "STDOUT",
+    "STDERR",
+    "TODO",
+    "FIXME",
+    "NOTE",
+    "XXX",
+    "HACK",
+    "TEMP",
+    "TBD",
+    "WIP",
+    "ASAP",
+    "ETA",
+    "POC",
+    "CORS",
+    "XSS",
+    "CSRF",
+    "DOS",
+    "DDOS",
+    "RSA",
+    "AES",
+    "SHA",
+    "HMAC",
+    "PGP",
+    "GPG",
 }
 
 
@@ -83,8 +196,8 @@ def check_vague_instructions(doc: PromptDocument) -> list[RuleResult]:
         matches = list(re.finditer(pattern, lower_text))
         for match in matches:
             # Find the line number for this match
-            line_num = doc.text[:match.start()].count("\n") + 1
-            matched_text = doc.text[match.start():match.end()]
+            line_num = doc.text[: match.start()].count("\n") + 1
+            matched_text = doc.text[match.start() : match.end()]
 
             results.append(
                 RuleResult(
@@ -125,7 +238,7 @@ def check_undefined_terminology(doc: PromptDocument) -> list[RuleResult]:
 
         # Find line number
         match = re.search(rf"\b{re.escape(acronym)}\b", doc.text)
-        line_num = doc.text[:match.start()].count("\n") + 1 if match else None
+        line_num = doc.text[: match.start()].count("\n") + 1 if match else None
 
         results.append(
             RuleResult(
@@ -133,10 +246,7 @@ def check_undefined_terminology(doc: PromptDocument) -> list[RuleResult]:
                 category="clarity",
                 severity=Severity.INFO,
                 message=f"Acronym '{acronym}' is used without definition.",
-                suggestion=(
-                    f"Consider defining '{acronym}' on first use, "
-                    f"e.g., '{acronym} (Your Definition Here)'."
-                ),
+                suggestion=(f"Consider defining '{acronym}' on first use, e.g., '{acronym} (Your Definition Here)'."),
                 score_impact=-3,
                 line=line_num,
             )

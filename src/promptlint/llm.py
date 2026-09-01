@@ -12,6 +12,7 @@ from typing import Any
 
 try:
     from litellm import completion
+
     LITELLM_AVAILABLE = True
 except ImportError:
     LITELLM_AVAILABLE = False
@@ -19,6 +20,7 @@ except ImportError:
 
 class LLMError(Exception):
     """Raised when LLM interaction fails."""
+
     pass
 
 
@@ -46,10 +48,7 @@ def evaluate_prompt(
         otherwise the raw string.
     """
     if not LITELLM_AVAILABLE:
-        raise LLMError(
-            "LiteLLM is not installed. "
-            "Please install with `pip install promptlint[ai]` to use AI features."
-        )
+        raise LLMError("LiteLLM is not installed. Please install with `pip install promptlint[ai]` to use AI features.")
 
     messages = [
         {"role": "system", "content": system_prompt},
