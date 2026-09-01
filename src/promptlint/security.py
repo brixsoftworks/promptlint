@@ -43,6 +43,9 @@ _SECRET_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
     ("GitHub OAuth Token", re.compile(r"gho_[a-zA-Z0-9]{36}")),
     ("GitHub App Token", re.compile(r"ghr_[a-zA-Z0-9]{36}")),
     ("GitHub PAT", re.compile(r"github_pat_[a-zA-Z0-9_]{22,}")),
+    ("OpenAI API Key", re.compile(r"sk-(?:proj-)?[a-zA-Z0-9_-]{32,}")),
+    ("Anthropic API Key", re.compile(r"sk-ant-[a-zA-Z0-9_-]{30,}")),
+    ("Google API Key", re.compile(r"AIzaSy[a-zA-Z0-9_-]{33}")),
     (
         "Private Key",
         re.compile(r"-----BEGIN\s+(?:RSA\s+|EC\s+|DSA\s+|OPENSSH\s+)?PRIVATE\s+KEY-----"),
@@ -59,14 +62,14 @@ _SECRET_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
     (
         "API Key Assignment",
         re.compile(
-            r"""(?:api[_-]?key|apikey|api[_-]?secret|access[_-]?key|secret[_-]?key|auth[_-]?token)\s*[=:]\s*["'][a-zA-Z0-9+/=_-]{16,}["']""",
+            r"""(?:api[_-]?key|apikey|api[_-]?secret|access[_-]?key|secret[_-]?key|auth[_-]?token|root[_-]?token)\s*[=:]\s*["']?[a-zA-Z0-9+/=_-]{16,}["']?""",
             re.IGNORECASE,
         ),
     ),
     (
         "Generic Token Assignment",
         re.compile(
-            r"""(?:token|secret|credential)\s*[=:]\s*["'][a-zA-Z0-9+/=_-]{20,}["']""",
+            r"""(?:token|secret|credential)\s*[=:]\s*["']?[a-zA-Z0-9+/=_-]{20,}["']?""",
             re.IGNORECASE,
         ),
     ),

@@ -96,6 +96,12 @@ _CONTRADICTION_PAIRS: list[tuple[list[str], list[str], str]] = [
         [r"\bask\s+(?:clarifying|follow-?up)\s+questions?\b"],
         "Question asking",
     ),
+    # Format: XML vs JSON
+    (
+        [r"\b(?:output|format)\s+(?:only\s+)?(?:in|as|using)\s+xml\b", r"\braw\s+xml\b", r"\bxml\s+format\b"],
+        [r"\b(?:output|format)\s+(?:in|as|using)\s+json\b", r"\bjson\s+(?:object|list)\b"],
+        "Format contradiction: XML vs JSON",
+    ),
     # Paragraphs vs lists
     (
         [r"\bwrite\s+in\s+paragraphs?\s+only\b", r"\bparagraph\s+form\s+only\b"],
