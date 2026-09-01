@@ -57,21 +57,22 @@ all = [
 promptlint = "promptlint.cli:app"
 
 [project.urls]
-Homepage = "https://github.com/promptlint/promptlint"
-Repository = "https://github.com/promptlint/promptlint"
-Issues = "https://github.com/promptlint/promptlint/issues"
-Documentation = "https://github.com/promptlint/promptlint/tree/main/docs"
+Homepage = "https://github.com/brixsoftworks/promptlint"
+Repository = "https://github.com/brixsoftworks/promptlint"
+Issues = "https://github.com/brixsoftworks/promptlint/issues"
+Documentation = "https://github.com/brixsoftworks/promptlint/tree/main/docs"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/promptlint"]
 
 [tool.ruff]
 target-version = "py311"
-line-length = 100
+line-length = 120
 src = ["src"]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "N", "W", "UP", "B", "SIM"]
+select = ["E", "F", "I", "W"]
+ignore = ["E501"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
